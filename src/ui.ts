@@ -319,6 +319,9 @@ export class UIManager {
 
   private checkUrlForRoomCode(): void {
     const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('drawer')) {
+      this.openDrawer();
+    }
     const room = urlParams.get('room');
     if (room && room.length >= 3) {
       this.setMode('multiplayer');

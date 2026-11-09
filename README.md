@@ -2,57 +2,73 @@
 
 An open-source orbital slingshot and territorial snare duel built with HTML5 Canvas, TypeScript, and the Web Audio API.
 
+**Play Online:** https://vikramlingam/ink-tether.github.io/ (or https://vikramlingam.github.io/ink-tether/)
+
 The game runs at 60 frames per second directly in modern web browsers with zero installation and zero external assets. All graphics, drafting grids, paper textures, and audio effects are generated procedurally in code.
 
----
-
-## Overview
-
-Two drafting needles glide across an architectural cream canvas leaving wet ink lines behind them. Players hold to tether onto fixed brass anchors, build angular momentum, and release to slingshot across the paper.
-
-Looping your wet ink line into a closed polygon banks permanent watercolor territory. If an opponent cuts through your wet line before you close it, your trail snaps and your unbanked progress is lost.
-
-Matches run for 90 seconds. The player with the highest percentage of captured paper at the end of the round wins.
+![INK-TETHER Gameplay](docs/screenshot-gameplay.png)
 
 ---
 
-## Core Mechanics
+## Game Rules and How to Play
 
-### 1. Compass Needle and Inertial Drift
-- Each player controls a drafting needle that glides forward with continuous momentum.
-- Aerodynamic drag applies gentle deceleration while keeping minimum cruising speed.
-- Hitting the arena boundary produces a dampened bounce with subtle ink ripples.
+### The Objective
+Your goal is to control the majority of the drafting canvas. You have 90 seconds to capture territory. The player who claims the highest percentage of the paper when the timer expires wins the duel. If either player claims 60% or more of the board during the match, they achieve an immediate knockout victory.
 
-### 2. Brass Anchors and Orbital Slingshots
-- 9 brass anchors are placed symmetrically across the board in normalized coordinates.
-- Holding the tether input draws an elastic line to the nearest anchor within capture range (240px normalized).
-- While latched:
-  - The needle orbits the anchor in the direction of approach (clockwise or counter-clockwise).
-  - Rotational speed accelerates based on distance and hold duration (up to 9.5 rad/s).
-  - Centripetal spring elasticity pulls the needle toward a stable orbital radius.
-- Releasing the input catapults the needle along its instantaneous tangent vector with an exit speed boost.
+### 1. Steering Through Orbital Slingshots
+You do not steer your needle using arrow keys or directional pads. Instead, your needle glides forward with momentum and gentle friction:
+- **Latching:** Press and hold your input (`Spacebar`, left mouse button, or touch screen). If you are within 240px of any brass anchor, an elastic guideline shoots out and latches onto it.
+- **Orbiting:** While holding, your needle enters a circular orbit around the anchor. Rotational speed accelerates based on distance and hold time (up to 9.5 rad/s).
+- **Slingshot Release:** Releasing your input snaps the tether and catapults your needle along its instantaneous tangent vector with an exit speed boost.
+- **Chaining:** By timing your releases so your tangent trajectory enters the capture zone of another peg, you can chain high-speed slingshots across the arena without touching borders.
 
-### 3. Territory Banking and Area Calculation
-- As the needle travels, it records vector trail points every few pixels.
-- The physics engine tests new line segments against earlier segments using 2D vector cross-products.
-- When a self-intersection is detected:
-  - Vertices are simplified using the Ramer-Douglas-Peucker algorithm.
-  - Enclosed area is computed via the Shoelace formula:
-    `Area = 0.5 * |sum(x_i * y_{i+1} - x_{i+1} * y_i)|`
-  - Valid loops are banked as permanent territory filled with a 15% opacity watercolor wash and 45-degree architectural hatching lines.
-  - The loop closure synthesizes a resonant pentatonic chime scaled to the polygon size.
+### 2. Snaring Territory
+As you fly across the paper, your needle leaves behind an active wet ink line:
+- To capture territory, draw a complete closed loop.
+- The physics engine uses 2D vector segment intersection tests to detect when your line crosses over itself.
+- When a loop closes, the enclosed area is computed using the Shoelace formula.
+- If the loop is valid (greater than 1400 sq px), the perimeter flashes with an ink bleed effect, the interior fills with your player's translucent watercolor wash and 45-degree architectural hatching lines, and a resonant pentatonic chime sounds.
+- Once banked, this territory is permanent and contributes to your live control percentage shown in the top HUD.
 
-### 4. Line Cutting Combat and Usurping
-- Wet ink lines are vulnerable until closed.
-- If an opponent needle crosses your unclosed wet line, the line snaps with an audio twang and visual recoil particles. Your wet trail is wiped back to your needle.
-- If a player draws a loop that fully encloses an opponent polygon, ownership of that inner polygon flips to the enclosing player.
+### 3. Thread Cutting Combat
+Unclosed wet lines are vulnerable:
+- While you are drafting a loop, your line is wet and exposed.
+- If an opponent flies through any part of your unclosed wet line, the line snaps like a guitar string.
+- Your needle suffers kinetic recoil stun and your entire unbanked wet line dissolves, wiping your progress for that loop.
+- Cutting opponent lines is the primary defensive counter to stop large territory claims.
+
+### 4. Usurping Territory
+If your opponent has already banked a polygon, you can steal it:
+- Draw a larger loop that completely encloses your opponent's existing territory.
+- When your larger loop closes, any inner enemy polygons flip ownership to your color.
+
+### 5. Tactical Advice
+- **Keep Early Loops Modest:** Do not draw massive loops across the entire board early on. Long wet lines are easy targets for opponents to cut.
+- **Bait and Sever:** Watch your opponent's trailing line. If they get greedy and draw a long unclosed trail, slingshot across their path to snap it.
+- **Boundary Bounces:** The arena perimeter has dampened restitution. You can bounce off walls intentionally to reverse direction without latching onto an anchor.
+
+---
+
+## Minimalist Settings Drawer
+
+All secondary settings, matchmaking options, and telemetry are tucked inside the top-right hamburger drawer:
+
+![INK-TETHER Settings and Manual](docs/screenshot-drawer.png)
+
+From the drawer, you can:
+- Switch operational modes (Single Player AI, Global Room, Local 2-Player).
+- Select bot difficulty heuristics (Novice, Acrobat, Predator).
+- Generate and copy 5-letter room codes or direct invite links.
+- Adjust procedural sound synthesis volume or mute audio.
+- View real-time match telemetry (snared percentage, slingshots fired, threads severed, peak velocity).
+- Review the quick drafting manual.
 
 ---
 
 ## Visual and Audio Direction
 
 ### Architectural Drafting Canvas
-- **Paper Tone:** Warm cream vellum (`#FBF9F4`) with procedural fiber grain.
+- **Paper Tone:** Warm cream vellum (`#FBF9F4`) with procedural fiber tooth.
 - **Grid Lines:** Dual graph guidelines (`#E4E0D5` major 100px grid, `#EFECE3` minor 20px grid) with 45-degree isometric guides.
 - **Technical Markings:** Archival corner crosshairs (`+`) with dynamic coordinate readouts, millimeter graduation ticks along the perimeter, and a background compass rose.
 - **Title Block:** ISO-128 technical drawing block rendered in the corner.
@@ -112,6 +128,7 @@ ink-tether/
 ├── tsconfig.json        # TypeScript configuration
 ├── vite.config.ts       # Vite bundler configuration
 ├── LICENSE              # MIT License
+├── docs/                # Screenshots and documentation assets
 └── src/
     ├── types.ts         # Data models and interfaces
     ├── math.ts          # Geometry, Shoelace area, Hermite splines, intersection tests
