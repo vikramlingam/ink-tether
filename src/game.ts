@@ -120,7 +120,7 @@ export class GameEngine {
     // Player 1: Archival Ballpoint Blue (#1A365D)
     this.p1 = {
       id: 'p1',
-      name: 'Player 1',
+      name: 'Blue',
       color: '#1A365D',
       fillColor: '#1A365D',
       washColor: 'rgba(26, 54, 93, 0.15)',
@@ -150,7 +150,7 @@ export class GameEngine {
     // Player 2: Terracotta Crimson Ink (#C85A32)
     this.p2 = {
       id: 'p2',
-      name: this.mode === 'ai' ? 'Drafting Bot' : 'Player 2',
+      name: 'Orange',
       color: '#C85A32',
       fillColor: '#C85A32',
       washColor: 'rgba(200, 90, 50, 0.15)',
