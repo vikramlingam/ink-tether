@@ -127,3 +127,4 @@ export interface ClientInputPacket {
   type: 'input';
   p2: RemotePlayerPacket;
 }
+

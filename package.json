@@ -1,8 +1,25 @@
 {
   "name": "ink-tether",
-  "private": true,
+  "private": false,
   "version": "1.0.0",
+  "description": "Orbital slingshot and territorial snare duel on an architectural drafting canvas.",
   "type": "module",
+  "license": "MIT",
+  "author": "Vikram Lingam",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vikramlingam/ink-tether.git"
+  },
+  "keywords": [
+    "html5-canvas",
+    "typescript",
+    "web-audio-api",
+    "webrtc",
+    "multiplayer-game",
+    "drafting",
+    "procedural-graphics",
+    "peerjs"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

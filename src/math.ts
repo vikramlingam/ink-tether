@@ -229,3 +229,4 @@ function perpendicularDistance(p: Vector2D, a: Vector2D, b: Vector2D): number {
   if (mag < 1e-6) return dist(p, a);
   return Math.abs((p.x - a.x) * dy - (p.y - a.y) * dx) / mag;
 }
+
