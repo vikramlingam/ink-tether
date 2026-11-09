@@ -210,19 +210,19 @@ export class UIManager {
     if (mode === 'ai') {
       this.aiDiffSection.style.display = 'block';
       this.mpSection.style.display = 'none';
-      this.p2LabelText.textContent = 'ORANGE: 0.0%';
+      this.p2LabelText.textContent = 'RED: 0.0%';
       this.network.cleanup();
     } else if (mode === 'multiplayer') {
       this.aiDiffSection.style.display = 'none';
       this.mpSection.style.display = 'block';
-      this.p2LabelText.textContent = 'ORANGE: 0.0%';
+      this.p2LabelText.textContent = 'RED: 0.0%';
       if (this.network.status === 'disconnected') {
         this.network.hostRoom();
       }
     } else if (mode === 'local2p') {
       this.aiDiffSection.style.display = 'none';
       this.mpSection.style.display = 'none';
-      this.p2LabelText.textContent = 'ORANGE: 0.0%';
+      this.p2LabelText.textContent = 'RED: 0.0%';
       this.network.cleanup();
     }
   }
@@ -257,7 +257,7 @@ export class UIManager {
     const p2Formatted = p2Pct.toFixed(1);
 
     this.p1LabelText.textContent = `BLUE: ${p1Formatted}%`;
-    this.p2LabelText.textContent = `ORANGE: ${p2Formatted}%`;
+    this.p2LabelText.textContent = `RED: ${p2Formatted}%`;
 
     this.p1BarFill.style.width = `${Math.min(p1Pct, 100)}%`;
     this.p2BarFill.style.width = `${Math.min(p2Pct, 100)}%`;
@@ -278,10 +278,10 @@ export class UIManager {
     this.modalVelocity.textContent = `${Math.max(stats.p1MaxSpeed, stats.p2MaxSpeed)} px/s`;
 
     if (stats.winner === 'p1') {
-      this.modalWinnerText.textContent = 'BLUE WINS';
+      this.modalWinnerText.textContent = 'BLUE WON';
       this.modalWinnerText.className = 'modal-result result-p1';
     } else if (stats.winner === 'p2') {
-      this.modalWinnerText.textContent = 'ORANGE WINS';
+      this.modalWinnerText.textContent = 'RED WON';
       this.modalWinnerText.className = 'modal-result result-p2';
     } else {
       this.modalWinnerText.textContent = 'DRAW';

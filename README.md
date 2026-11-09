@@ -57,7 +57,7 @@ All secondary settings, matchmaking options, and telemetry are tucked inside the
 
 From the drawer, you can:
 - Switch operational modes (Single Player AI, Global Room, Local 2-Player).
-- Select bot difficulty heuristics (Novice, Acrobat, Predator).
+- Select bot difficulty (Novice, Acrobat, Predator).
 - Generate and copy 5-letter room codes or direct invite links.
 - Adjust procedural sound synthesis volume or mute audio.
 - View real-time match telemetry (snared percentage, slingshots fired, threads severed, peak velocity).
@@ -102,7 +102,7 @@ All sound effects are synthesized procedurally at runtime via the Web Audio API 
 
 ## Game Modes
 
-### 1. Offline Single Player (Heuristic Bot)
+### 1. Offline Single Player Bot
 Runs entirely client-side with three selectable difficulty levels:
 - **Novice:** Predictable orbit durations (1.0 to 1.8 seconds); focuses on small localized loops.
 - **Acrobat:** Evaluates tangent vectors toward neighboring anchors to chain slingshots across 3 or more pegs in rapid succession.
@@ -133,7 +133,7 @@ ink-tether/
     ├── math.ts          # Geometry, Shoelace area, Hermite splines, intersection tests
     ├── audio.ts         # Web Audio API sound synthesis engine
     ├── renderer.ts      # HTML5 Canvas rendering pipeline and paper aesthetics
-    ├── ai.ts            # Heuristic bot logic (Novice, Acrobat, Predator)
+    ├── ai.ts            # Bot logic (Novice, Acrobat, Predator)
     ├── multiplayer.ts   # WebRTC PeerJS networking and room matchmaking
     ├── game.ts          # Physics, slingshot simulation, territory snaring, combat
     ├── ui.ts            # Minimalist HUD, settings drawer, and telemetry display
