@@ -2,7 +2,7 @@
 
 An open-source orbital slingshot and territorial snare duel built with HTML5 Canvas, TypeScript, and the Web Audio API.
 
-**Play Online:** https://vikramlingam/ink-tether.github.io/ (or https://vikramlingam.github.io/ink-tether/)
+**Play Online:** https://vikramlingam.github.io/ink-tether/
 
 The game runs at 60 frames per second directly in modern web browsers with zero installation and zero external assets. All graphics, drafting grids, paper textures, and audio effects are generated procedurally in code.
 
