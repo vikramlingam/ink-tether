@@ -27,7 +27,7 @@ export class BotAI {
     bot: Needle,
     player: Needle,
     anchors: Anchor[],
-    _arenaWidth: number,
+    arenaWidth: number,
     _arenaHeight: number
   ): boolean {
     this.stateTimer += dt;
@@ -38,7 +38,7 @@ export class BotAI {
       case 'acrobat':
         return this.updateAcrobat(bot, anchors);
       case 'predator':
-        return this.updatePredator(bot, player, anchors);
+        return this.updatePredator(bot, player, anchors, arenaWidth);
       default:
         return this.updateNovice(bot, anchors);
     }
@@ -145,10 +145,12 @@ export class BotAI {
   private updatePredator(
     bot: Needle,
     player: Needle,
-    anchors: Anchor[]
+    anchors: Anchor[],
+    arenaWidth: number
   ): boolean {
+    const threshold = arenaWidth <= 768 ? 140 : 200;
     const playerLineLength = this.calculateTrailLength(player.wetTrail);
-    const isPlayerVulnerable = playerLineLength > 200 && player.wetTrail.length > 8;
+    const isPlayerVulnerable = playerLineLength > threshold && player.wetTrail.length > 8;
 
     if (bot.isTethered) {
       const currentAnchor = anchors.find(a => a.id === bot.tetherAnchorId);

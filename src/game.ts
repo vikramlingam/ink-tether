@@ -34,6 +34,11 @@ export class GameEngine {
   public arenaWidth: number = 1000;
   public arenaHeight: number = 700;
   public playableArea: number = 1;
+  public isMobile: boolean = false;
+
+  public getSpeedScale(): number {
+    return this.isMobile ? 0.72 : 1.0;
+  }
 
   // 90s Match Countdown
   public matchDuration: number = 90;
@@ -65,6 +70,8 @@ export class GameEngine {
   public initArena(width: number, height: number): void {
     this.arenaWidth = width;
     this.arenaHeight = height;
+    const isTouch = ('ontouchstart' in window) || (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0);
+    this.isMobile = width <= 768 || (isTouch && width <= 1024);
     const margin = 24;
     this.playableArea = Math.max(1000, (width - margin * 2) * (height - margin * 2));
 
@@ -108,6 +115,7 @@ export class GameEngine {
 
     const w = this.arenaWidth;
     const h = this.arenaHeight;
+    const speedScale = this.getSpeedScale();
 
     // Player 1: Archival Ballpoint Blue (#1A365D)
     this.p1 = {
@@ -118,10 +126,10 @@ export class GameEngine {
       washColor: 'rgba(26, 54, 93, 0.15)',
       x: w * 0.25,
       y: h * 0.5,
-      vx: 180,
-      vy: -120,
+      vx: 180 * speedScale,
+      vy: -120 * speedScale,
       angle: -Math.PI / 4,
-      speed: 216,
+      speed: 216 * speedScale,
       isTethered: false,
       tetherAnchorId: null,
       tetherAngle: 0,
@@ -148,10 +156,10 @@ export class GameEngine {
       washColor: 'rgba(200, 90, 50, 0.15)',
       x: w * 0.75,
       y: h * 0.5,
-      vx: -180,
-      vy: 120,
+      vx: -180 * speedScale,
+      vy: 120 * speedScale,
       angle: 3 * Math.PI / 4,
-      speed: 216,
+      speed: 216 * speedScale,
       isTethered: false,
       tetherAnchorId: null,
       tetherAngle: 0,
@@ -259,6 +267,8 @@ export class GameEngine {
       needle.recoilTimer -= dt;
     }
 
+    const speedScale = this.getSpeedScale();
+
     // Latch Tether Initiation
     if (inputHeld) {
       if (!needle.isTethered) {
@@ -280,7 +290,7 @@ export class GameEngine {
           needle.orbitDirection = crossVal >= 0 ? 1 : -1;
 
           // Initial angular velocity: omega = v / r
-          const initialSpeed = Math.max(needle.speed, 220);
+          const initialSpeed = Math.max(needle.speed, 220 * speedScale);
           needle.angularVelocity = (initialSpeed / needle.orbitRadius) * needle.orbitDirection;
         }
       }
@@ -293,7 +303,8 @@ export class GameEngine {
         // Slingshot release boost! Exit along instantaneous tangent vector
         const tangentAngle = needle.tetherAngle + (needle.orbitDirection * Math.PI) / 2;
         const spoolBoost = Math.min(1.0 + needle.tetherHoldDuration * 0.45, 1.55);
-        const exitSpeed = Math.min(Math.abs(needle.angularVelocity * needle.orbitRadius) * spoolBoost, 780);
+        const maxExitSpeed = 780 * speedScale;
+        const exitSpeed = Math.min(Math.abs(needle.angularVelocity * needle.orbitRadius) * spoolBoost, maxExitSpeed);
 
         needle.vx = Math.cos(tangentAngle) * exitSpeed;
         needle.vy = Math.sin(tangentAngle) * exitSpeed;
@@ -317,8 +328,8 @@ export class GameEngine {
         needle.tetherHoldDuration += dt;
 
         // Accelerate rotational speed: omega increases smoothly up to maximum
-        const maxOmega = 9.5;
-        const accel = 4.2;
+        const maxOmega = 9.5 * speedScale;
+        const accel = 4.2 * speedScale;
         if (needle.orbitDirection > 0) {
           needle.angularVelocity = Math.min(needle.angularVelocity + accel * dt, maxOmega);
         } else {
@@ -354,7 +365,7 @@ export class GameEngine {
       needle.y += needle.vy * dt;
 
       // Gentle aerodynamic drag (coasts at high speed, never dead stops)
-      const minSpeed = 160;
+      const minSpeed = 160 * speedScale;
       needle.vx *= Math.pow(0.992, dt * 60);
       needle.vy *= Math.pow(0.992, dt * 60);
       needle.speed = Math.hypot(needle.vx, needle.vy);
