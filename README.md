@@ -74,11 +74,10 @@ From the drawer, you can:
 - **Title Block:** ISO-128 technical drawing block rendered in the corner.
 - **Line Boil:** A 12fps procedural micro-jitter applied to wet lines to replicate hand-drawn fountain pen strokes.
 
-### Procedural Web Audio (0 MB Download)
-All sounds are synthesized at runtime via the Web Audio API without external audio files:
-- **Tether Spooling:** Mechanical ratchet clicks scaled to rotational speed.
+### Procedural Web Audio SFX (0 MB Download)
+All sound effects are synthesized procedurally at runtime via the Web Audio API without background noise or external audio files:
+- **Tether Spooling:** Mechanical ratchet clicks scaled to rotational speed while orbiting an anchor.
 - **Slingshot Snap:** Acoustic whip crack with pitch decay and high-frequency noise.
-- **Fountain Pen Scratch:** Looped pink noise buffer through a 2800Hz bandpass filter, with gain dynamically modulated by needle velocity.
 - **Loop Closure Chords:** Multi-voice pentatonic acoustic chimes with exponential decay, pitched higher for larger snared areas.
 - **Thread Snap:** Snapping twang using dual detuned saw and square oscillators with a fast downward pitch dive.
 - **Boundary Tap:** Muted drafting ruler tap on canvas edges.

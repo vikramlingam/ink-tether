@@ -8,12 +8,6 @@ export class SoundEngine {
   private isMuted: boolean = false;
   private volume: number = 0.7;
 
-  // Continuous pen scratch generator
-  private scratchSource: AudioBufferSourceNode | null = null;
-  private scratchGain: GainNode | null = null;
-  private scratchFilter: BiquadFilterNode | null = null;
-  private pinkNoiseBuffer: AudioBuffer | null = null;
-
   // Mechanical ratchet timing
   private lastRatchetTime: number = 0;
 
@@ -29,9 +23,6 @@ export class SoundEngine {
       this.masterGain = this.ctx.createGain();
       this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : this.volume, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
-
-      this.initPinkNoiseBuffer();
-      this.startPenScratchNode();
     } catch (e) {
       console.warn('Web Audio API not supported or blocked:', e);
     }
@@ -71,81 +62,6 @@ export class SoundEngine {
 
   public getVolume(): number {
     return this.volume;
-  }
-
-  /**
-   * Generates a 2-second looped pink noise buffer for authentic nib friction
-   */
-  private initPinkNoiseBuffer(): void {
-    if (!this.ctx) return;
-    const bufferSize = this.ctx.sampleRate * 2;
-    this.pinkNoiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-    const output = this.pinkNoiseBuffer.getChannelData(0);
-
-    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
-    for (let i = 0; i < bufferSize; i++) {
-      const white = Math.random() * 2 - 1;
-      b0 = 0.99886 * b0 + white * 0.0555179;
-      b1 = 0.99332 * b1 + white * 0.0750759;
-      b2 = 0.96900 * b2 + white * 0.1538520;
-      b3 = 0.86650 * b3 + white * 0.3104856;
-      b4 = 0.55000 * b4 + white * 0.5329522;
-      b5 = -0.7616 * b5 - white * 0.0168980;
-      output[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362) * 0.11;
-      b6 = white * 0.115926;
-    }
-  }
-
-  /**
-   * Initializes persistent fountain pen scratch sound node
-   */
-  private startPenScratchNode(): void {
-    if (!this.ctx || !this.pinkNoiseBuffer || !this.masterGain) return;
-    try {
-      this.scratchSource = this.ctx.createBufferSource();
-      this.scratchSource.buffer = this.pinkNoiseBuffer;
-      this.scratchSource.loop = true;
-
-      // Bandpass filter centered on crisp fountain pen paper tooth (~2800 Hz)
-      this.scratchFilter = this.ctx.createBiquadFilter();
-      this.scratchFilter.type = 'bandpass';
-      this.scratchFilter.frequency.value = 2800;
-      this.scratchFilter.Q.value = 1.6;
-
-      this.scratchGain = this.ctx.createGain();
-      this.scratchGain.gain.setValueAtTime(0, this.ctx.currentTime);
-
-      this.scratchSource.connect(this.scratchFilter);
-      this.scratchFilter.connect(this.scratchGain);
-      this.scratchGain.connect(this.masterGain);
-
-      this.scratchSource.start(0);
-    } catch {
-      // safe fallback
-    }
-  }
-
-  /**
-   * Modulates fountain pen scratch intensity based on needle velocity
-   */
-  public updatePenScratch(speed: number, isDrawing: boolean): void {
-    if (!this.ctx || !this.scratchGain || this.isMuted) return;
-    const now = this.ctx.currentTime;
-    if (!isDrawing || speed < 20) {
-      this.scratchGain.gain.setTargetAtTime(0, now, 0.08);
-      return;
-    }
-
-    // Scale gain with velocity: gentle whisper at slow speed, audible tooth at high speed
-    const normalizedSpeed = Math.min(speed / 900, 1);
-    const targetGain = 0.04 + normalizedSpeed * 0.12;
-    this.scratchGain.gain.setTargetAtTime(targetGain, now, 0.05);
-
-    if (this.scratchFilter) {
-      // Frequency slightly rises with friction speed
-      const targetFreq = 2200 + normalizedSpeed * 1400;
-      this.scratchFilter.frequency.setTargetAtTime(targetFreq, now, 0.05);
-    }
   }
 
   /**

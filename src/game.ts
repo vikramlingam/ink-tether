@@ -226,10 +226,7 @@ export class GameEngine {
       this.updateNeedlePhysics(this.p2, this.p2InputHeld, clampedDt);
     }
 
-    // 4. Update audio pen scratch based on P1 speed
-    sound.updatePenScratch(this.p1.speed, true);
-
-    // 5. Update Trail sampling & check for polygon closure
+    // 4. Update Trail sampling & check for polygon closure
     this.updateTrailAndSnare(this.p1);
     if (this.mode !== 'multiplayer') {
       this.updateTrailAndSnare(this.p2);
